@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart,signInSuccess,signInFailure } from "../Redux/User/userslice";
 
 export default function SignIn() {
   const [formData, setformData]=useState({});
- const [error,seterror]=useState(null)
- const [loading, setloading]=useState(false)
+/*  const [error,seterror]=useState(null)
+ const [loading, setloading]=useState(false) */
+ const {loading,error}=useSelector((state)=>state.user)
  const navigate = useNavigate();
+ const dispatch = useDispatch()
   const handleChange = (e)=>{
     setformData({
       ...formData,
@@ -15,8 +19,9 @@ export default function SignIn() {
   const handelSubmit = async (e) =>{
     e.preventDefault();// to un refresh pages
     try{
-      setloading(true)
-      const res = await fetch('/api/auth/signin',
+      dispatch(signInStart())
+/*       setloading(true)
+ */      const res = await fetch('/api/auth/signin',
       {
         method:'POST',
         headers:{
@@ -28,17 +33,21 @@ export default function SignIn() {
       );
       const data = await res.json();
       if(data.success === false){
-        seterror(data.message);
-        setloading(false);
+      /*   seterror(data.message);
+        setloading(false); */
+        dispatch(signInFailure(data.message))
+
         return;
   
       }
-    setloading(false);
-    seterror(null);
+  /*   setloading(false);
+    seterror(null); */
+    dispatch(signInSuccess(data))
     navigate('/')
     }catch(error){
-      setloading(false);
-      seterror(error.message)
+    /*   setloading(false);
+      seterror(error.message) */
+      dispatch(signInFailure(error.message))
       
     }
   };
