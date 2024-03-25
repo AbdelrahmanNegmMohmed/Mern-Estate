@@ -22,3 +22,16 @@ app.listen(3000,()=>{
 
 app.use("/api/user",userRouter);
 app.use("/api/auth", authRouter);
+
+
+//midellware
+app.use((error,request,response,next)=>{
+    const statusCode = error.statusCode || 500 ;
+    const message = error.message || 'Internal server Error';
+    return response.status(statusCode).json({
+        success:false,
+        statusCode,
+        message,
+    })
+
+})
