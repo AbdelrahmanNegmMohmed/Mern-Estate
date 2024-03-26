@@ -1,4 +1,3 @@
-import React from 'react';
 import { GoogleAuthProvider, getAuth, signInWithPopup} from 'firebase/auth';
 import { app } from '../Firebase';
 import { useDispatch } from 'react-redux';
@@ -14,20 +13,21 @@ export default function Outh() {
 
 
             const result = await signInWithPopup(auth,provider)
-            //send google data for database
-            const res =  await fetch('/api/auth/google',{
-                method:"POST",
-                headers: {
-                    'Content-Type':'appliction/json',
-                },
-                body:JSON.stringify({name:result.user.displayName,
-                     email:result.user.email,
-                    photo:result.user.photoURL}),
-                })
+            console.log(result);
+                const res = await fetch('/api/auth/google', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    photo: result.user.photoURL,
+                  }),
+                });
                 const data = await res.json();
                 dispatch(signInSuccess(data));
-                navigate('/')
-
+                navigate('/');
         }catch(error){
             console.log('could not sign in with google',error.message);
             }
