@@ -60,7 +60,7 @@ export const updateUser = async (request, response, next) => {
         { new: true }
       );
   
-      const { password, ...rest } = updatedUser._doc;
+      const { password, ...rest } = updatedUser._doc; 
   
       response.status(200).json(rest);
     } catch (error) {
