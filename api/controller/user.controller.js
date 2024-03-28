@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import User from "../models/user.model.js";
 import { errorHandelar } from "../utils/error.js";
+import Listing from '../models/listing.Model.js';
 
 export const test = (request,response)=>{
     response.json({
@@ -8,37 +9,6 @@ export const test = (request,response)=>{
     })
 }
 
-/* export const updateUser  = async(requestuest, responseponse, next)=>{
-    if (requestuest.user.id !== requestuest.params.id)
-    return next(errorHandelar(401,"you can only update your account!"))
-    try {
-        
-        if (requestuest.body.password){
-            requestuest.body.password = bcryptjs.hashSync(requestuest.body.password, 10)
-        
-        }
-
-        const updateUser = await User.findByIdAndUpdate(
-            requestuest.params.id,
-            {
-            $set:{
-                username: requestuest.body.username,
-                email:requestuest.body.emaile,
-                password:requestuest.body.password,
-                avatar:requestuest.body.avatar,
-            
-            }
-        },{new:true})
-
-        const {password, ...responset}= updateUser._doc;
-
-        responseponse.status(200).json(responset);
-    } catch (error) {
-        next (error)
-        
-    }
-
-}; */
 export const updateUser = async (request, response, next) => {
     if (request.user.id !== request.params.id)
       return next(errorHandelar(401, 'You can only update your own account!'));
@@ -68,7 +38,7 @@ export const updateUser = async (request, response, next) => {
     }
   };
 
-  export const deletUser = async(request, response, next)=>{
+export const deletUser = async(request, response, next)=>{
     if (request.user.id !== request.params.id)
     return next (errorHandelar(401,'You can only delete youuur own account !'));
     try{
@@ -83,4 +53,22 @@ export const updateUser = async (request, response, next) => {
       }
     
 
+  }
+
+
+export const getUserListings =async (request, response, next)  =>{
+
+
+  if (request.user.id === request.params.id){
+    try{
+      const listings = await Listing.find({userRef: request.params.id});
+      response.status(200).json(listings);
+
+    }catch(error){
+      next(error)
+    }
+
+  }else{
+    return next (errorHandelar(401,"You can only view your own listings"))
+  }
   }
