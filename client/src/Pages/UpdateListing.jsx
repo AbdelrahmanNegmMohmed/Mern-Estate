@@ -292,8 +292,10 @@ Update a Listing        </h1>
                 />
                 <div className="flex flex-col items-center">
                   <p>Regular price</p>
-                  <span className="text-xs">($ / month)</span>
-                </div>
+                  
+                  {formData.type === 'rent' && (
+                  <span className='text-xs'>($ / month)</span>
+                )}                </div>
               </div>
   
   
@@ -312,8 +314,9 @@ Update a Listing        </h1>
                 />
                 <div className="flex flex-col items-center">
                   <p>Discounted price</p>
-                  <span className="text-xs">($ / month)</span>
-                </div>
+                  {formData.type === 'rent' && (
+                    <span className='text-xs'>($ / month)</span>
+                  )}                </div>
               </div>
   
                   )
